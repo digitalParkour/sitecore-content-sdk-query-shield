@@ -1,7 +1,7 @@
-import { SitecoreClient } from '@sitecore-content-sdk/nextjs/client';
-import scConfig from 'sitecore.config';
+import scConfig from "sitecore.config";
+import { SitecoreServerProxyClient } from "./shield/sitecore-server-proxy-client";
 
-const client = new SitecoreClient({
+const client = new SitecoreServerProxyClient({
   ...scConfig,
 });
 

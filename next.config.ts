@@ -1,5 +1,9 @@
-import type { NextConfig } from 'next';
-import createNextIntlPlugin from 'next-intl/plugin';
+import type { NextConfig } from "next";
+import createNextIntlPlugin from "next-intl/plugin";
+import {
+  loadQueryShieldAliases,
+  turbopackQueryShieldOptions,
+} from "src/lib/shield/build/next-config-utils";
 
 const nextConfig: NextConfig = {
   // Enable Turbopack file system caching for faster dev startup (beta)
@@ -14,14 +18,14 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'edge*.**',
-        port: '',
+        protocol: "https",
+        hostname: "edge*.**",
+        port: "",
       },
       {
-        protocol: 'https',
-        hostname: 'xmc-*.**',
-        port: '',
+        protocol: "https",
+        hostname: "xmc-*.**",
+        port: "",
       },
     ],
   },
@@ -29,17 +33,33 @@ const nextConfig: NextConfig = {
   rewrites: async () => {
     return [
       {
-        source: '/sitemap:id([\\w-]{0,}).xml',
-        destination: '/api/sitemap',
+        source: "/sitemap:id([\\w-]{0,}).xml",
+        destination: "/api/sitemap",
         locale: false,
       },
       {
-        source: '/robots.txt',
-        destination: '/api/robots',
+        source: "/robots.txt",
+        destination: "/api/robots",
         locale: false,
       },
     ];
   },
+  /* BEGIN QUERY SHIELD */
+  turbopack: {
+    // Primary implementation for shield import aliases
+    ...turbopackQueryShieldOptions(),
+  },
+  webpack: (config, { isServer }) => {
+    // Optional fallback for webpack aliases
+    if (!isServer) {
+      const shieldAliases = loadQueryShieldAliases();
+      if (shieldAliases) {
+        config.resolve.alias = { ...config.resolve.alias, ...shieldAliases };
+      }
+    }
+    return config;
+  },
+  /* END QUERY SHIELD */
 };
 
 const withNextIntl = createNextIntlPlugin();

@@ -29,3 +29,7 @@
 !.sitecore/import-map.ts
 !.sitecore/import-map.server.ts
 !.sitecore/import-map.client.ts
+
+# ignore generated shield files
+*.shield.ts
+.shield/

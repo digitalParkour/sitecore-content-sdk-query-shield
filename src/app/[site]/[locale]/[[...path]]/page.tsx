@@ -1,18 +1,22 @@
-import { isDesignLibraryPreviewData } from '@sitecore-content-sdk/nextjs/editing';
-import { notFound } from 'next/navigation';
-import { draftMode } from 'next/headers';
-import { SiteInfo } from '@sitecore-content-sdk/nextjs';
-import sites from '.sitecore/sites.json';
-import { routing } from 'src/i18n/routing';
-import scConfig from 'sitecore.config';
-import client from 'src/lib/sitecore-client';
-import Layout, { RouteFields } from 'src/Layout';
-import Providers from 'src/Providers';
-import { NextIntlClientProvider } from 'next-intl';
-import { setRequestLocale } from 'next-intl/server';
+import sites from ".sitecore/sites.json";
+import { isDesignLibraryPreviewData } from "@sitecore-content-sdk/nextjs/editing";
+import { NextIntlClientProvider } from "next-intl";
+import { setRequestLocale } from "next-intl/server";
+import { draftMode } from "next/headers";
+import { notFound } from "next/navigation";
+import scConfig from "sitecore.config";
+import { routing } from "src/i18n/routing";
+import Layout, { RouteFields } from "src/Layout";
+import client from "src/lib/sitecore-client";
+import Providers from "src/Providers";
 
 type PageProps = {
-  params: Promise<{ site: string; locale: string; path?: string[]; [key: string]: string | string[] | undefined }>;
+  params: Promise<{
+    site: string;
+    locale: string;
+    path?: string[];
+    [key: string]: string | string[] | undefined;
+  }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
@@ -54,17 +58,17 @@ export default async function Page({ params, searchParams }: PageProps) {
 // This function gets called at build and export time to determine
 // pages for SSG ("paths", as tokenized array).
 export const generateStaticParams = async () => {
-  if (process.env.NODE_ENV !== 'development' && scConfig.generateStaticPaths) {
+  /* if (process.env.NODE_ENV !== 'development' && scConfig.generateStaticPaths) {
     return await client.getAppRouterStaticParams(
       sites.map((site: SiteInfo) => site.name),
       routing.locales.slice()
     );
-  }
+  } */
   // Next.js 16 requires at least one result
   // Return a default param for the root page
   return [
     {
-      site: sites[0]?.name || 'default',
+      site: sites[0]?.name || "default",
       locale: routing.defaultLocale || scConfig.defaultLanguage,
       path: [],
     },
@@ -77,6 +81,9 @@ export const generateMetadata = async ({ params }: PageProps) => {
   // The same call as for rendering the page. Should be cached by default react behavior
   const page = await client.getPage(path ?? [], { site, locale });
   return {
-    title: (page?.layout.sitecore.route?.fields as RouteFields)?.Title?.value?.toString() || 'Page',
+    title:
+      (
+        page?.layout.sitecore.route?.fields as RouteFields
+      )?.Title?.value?.toString() || "Page",
   };
 };
