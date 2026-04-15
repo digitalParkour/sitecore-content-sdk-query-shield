@@ -4,18 +4,18 @@
 
 1. `NEXT_PUBLIC_USE_SHIELD=true`
 
-- proxy client-side Sitecore queries to hide Context Id or API Key
+- Proxy client-side Sitecore queries to hide Context Id or API Key
   ![NEXT_PUBLIC_USE_SHIELD=true](./docs/img/Issue_1_06_Example_Proxy.png)
 
 2. `NEXT_PUBLIC_SHIELD_QUERY=true`
 
-- hash queries in codebase and deny other query payloads
+- Hash queries in codebase and deny other query payloads
   ![NEXT_PUBLIC_SHIELD_QUERY=true](./docs/img/Issue_2_02_Solution.png)
   ![NEXT_PUBLIC_SHIELD_QUERY=true](./docs/img/Issue_2_03_BlockQuery.png)
 
 3. `SHIELD_VARIABLES=true`
 
-- block out-of-scope **path** and common **id** variable values
+- Block out-of-scope **path** and common **id** variable values
   ![SHIELD_VARIABLES=true](./docs/img/Issue_3_01_BlockedPath.png)
 
 # How to run this example repo
