@@ -75,29 +75,26 @@ TEMP_SHIELD_BYPASS_AND_LOG=false #Keep false unless actively troubleshooting blo
 
 # Summary of implementation:
 
-1. Sitecore GraphQL Proxy
+1. `NEXT_PUBLIC_USE_SHIELD=true`
 
-- Enabled by using `SitecoreServerProxyClient()` in sitecore-client.ts
+- Enables Sitecore GraphQL Proxy using `SitecoreServerProxyClient()` in sitecore-client.ts
 - **Context aware SitecoreClient**
   - if browser, post query to new server proxy /api/graphql
   - else server, post to Sitecore endpoint with server-side secret
 
-2. Registers \*graphql.ts files on build to gate proxied requets
+2. `NEXT_PUBLIC_SHIELD_QUERY=true`
 
-- Enabled by `NEXT_PUBLIC_SHIELD_QUERY=true`
-- sitecore.cli.config **build command** generates lookup file
-- Proxy, /api/graphql, verifies incoming query matches list
-
-2. Obfuscate browser-side queries and minimize payload size
-
-- Enabled by `NEXT_PUBLIC_SHIELD_QUERY=true`
 - Assumes all your graphql queries are imported from \*graphql.ts files
-- sitecore.cli.config **build command**:
-  - generates \*graphql.shield.ts file next to query file with same const but hashed id for query.
-  - generates import alias list
-- next.config.ts turbopack loader replaces the shield.ts file for the graphql.ts file on build (for client bundle only)
+- Registers \*graphql.ts files on build to gate proxied requets
+  - `sitecore.cli.config` **build command**, writeQueryShieldRegistry(), generates lookup file
+  - Proxy, /api/graphql, verifies incoming query matches list
+- Obfuscate browser-side queries and minimizes payload size
+  - `sitecore.cli.config` **build command**, writeQueryShieldRegistry():
+    - generates \*graphql.shield.ts file next to query file with same const but hashed id for query.
+    - generates import alias list
+  - `next.config.ts` turbopack loader replaces the shield.ts file for the graphql.ts file on build (for client bundle only)
 
-3. **Proxy** route sniffs for "id" or "path" variables and validates values against hard coded lists.
+3. `SHIELD_VARIABLES=true`
 
-- Enabled by `SHIELD_VARIABLES=true`
-- Manage **allow/deny lists** in /src/app/api/graphql/route.ts
+- **Proxy route** sniffs for "id" or "path" variables and validates values against hard coded lists.
+- Manage **allow/deny lists** in `/src/app/api/graphql/route.ts`
