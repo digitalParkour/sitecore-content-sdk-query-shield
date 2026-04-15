@@ -1,20 +1,21 @@
 # Query Shield — lock down Sitecore GraphQL access
 
-1. NEXT_PUBLIC_USE_SHIELD - to proxy Sitecore queries server side to hide Context Id or API Key
-   ![NEXT_PUBLIC_USE_SHIELD=true](./docs/img/Issue_2_02_Solution.png)
+## Features
 
-2. NEXT_PUBLIC_SHIELD_QUERY - hash queries in codebase and deny other query payloads
+1. NEXT_PUBLIC_USE_SHIELD=true: proxy client-side Sitecore queries to hide Context Id or API Key
+   ![NEXT_PUBLIC_USE_SHIELD=true](./docs/img/Issue_1_06_Example_Proxy.png)
 
-![NEXT_PUBLIC_SHIELD_QUERY=true](./docs/img/Issue_2_03_BlockQuery.png)
+2. NEXT_PUBLIC_SHIELD_QUERY=true: hash queries in codebase and deny other query payloads
+   ![NEXT_PUBLIC_SHIELD_QUERY=true](./docs/img/Issue_2_02_Solution.png)
+   ![NEXT_PUBLIC_SHIELD_QUERY=true](./docs/img/Issue_2_03_BlockQuery.png)
 
-3. SHIELD_VARIABLES - block out of scope **path** and common **id** variables
-
-![SHIELD_VARIABLES=true](./docs/img/Issue_3_01_BlockedPath.png)
+3. SHIELD_VARIABLES=true: block out-of-scope **path** and common **id** variable values
+   ![SHIELD_VARIABLES=true](./docs/img/Issue_3_01_BlockedPath.png)
 
 # How to run this example repo
 
 - Rename `env.example` to `.env`
-- Set your Sitecore Config Values
+  - Set your Sitecore Config Values
 
 ```
 SITECORE_EDGE_CONTEXT_ID=
@@ -27,7 +28,7 @@ NEXT_PUBLIC_DEFAULT_SITE_NAME=
 
 # How to add to existing project
 
-- This example repo is compatible with Next.js 16+, Context SDK 2.0.1
+- This example repo is compatible with Next.js 16, Context SDK 2.0.1
 - Add .env vars
   - These are typically false for local dev, enabled in deployed apps
 
@@ -67,32 +68,36 @@ TEMP_SHIELD_BYPASS_AND_LOG=false #Keep false unless actively troubleshooting blo
   - notice files generated under .shield/\*
   - **client queries will now proxy to /api/graphql and use hash ID for query**
 
-- If you want the test example, then also add:
+- To add the example page, add these files:
   - /src/app/[site]/[locale]/example/\*
   - /src/components/exampe/\*
   - /src/lib/example/\*
 
 # Summary of implementation:
 
-- 1. Sitecore GraphQL Proxy
-  - Enabled by using `SitecoreServerProxyClient()` in sitecore-client.ts
-  - **Context aware SitecoreClient**
-    - if browser, post query to new server proxy /api/graphql
-    - else server, post to Sitecore endpoint with server-side secret
+1. Sitecore GraphQL Proxy
 
-- 2. Registers \*graphql.ts files on build to gate proxied requets
-  - Enabled by `NEXT_PUBLIC_SHIELD_QUERY=true`
-  - sitecore.cli.config **build command** generates lookup file
-  - Proxy, /api/graphql, verifies incoming query matches list
+- Enabled by using `SitecoreServerProxyClient()` in sitecore-client.ts
+- **Context aware SitecoreClient**
+  - if browser, post query to new server proxy /api/graphql
+  - else server, post to Sitecore endpoint with server-side secret
 
-- 2. Obfuscate browser-side queries and minimize payload size
-  - Enabled by `NEXT_PUBLIC_SHIELD_QUERY=true`
-  - Assumes all your graphql queries are imported from \*graphql.ts files
-  - sitecore.cli.config **build command**:
-    - generates \*graphql.shield.ts file next to query file with same const but hashed id for query.
-    - generates import alias list
-  - next.config.ts turbopack loader replaces the shield.ts file for the graphql.ts file on build (for client bundle only)
+2. Registers \*graphql.ts files on build to gate proxied requets
 
-- 3. **Proxy** route sniffs for "id" or "path" variables and validates values against hard coded lists.
-  - Enabled by `SHIELD_VARIABLES=true`
-  - Manage **allow/deny lists** in /src/app/api/graphql/route.ts
+- Enabled by `NEXT_PUBLIC_SHIELD_QUERY=true`
+- sitecore.cli.config **build command** generates lookup file
+- Proxy, /api/graphql, verifies incoming query matches list
+
+2. Obfuscate browser-side queries and minimize payload size
+
+- Enabled by `NEXT_PUBLIC_SHIELD_QUERY=true`
+- Assumes all your graphql queries are imported from \*graphql.ts files
+- sitecore.cli.config **build command**:
+  - generates \*graphql.shield.ts file next to query file with same const but hashed id for query.
+  - generates import alias list
+- next.config.ts turbopack loader replaces the shield.ts file for the graphql.ts file on build (for client bundle only)
+
+3. **Proxy** route sniffs for "id" or "path" variables and validates values against hard coded lists.
+
+- Enabled by `SHIELD_VARIABLES=true`
+- Manage **allow/deny lists** in /src/app/api/graphql/route.ts
