@@ -5,16 +5,7 @@ import type {
   TExampleResult,
   TPageFields,
 } from "../../lib/example/fetch/example.type";
-
-const buttonStyle = {
-  marginTop: "10px",
-  color: "white",
-  backgroundColor: "black",
-  border: "none",
-  padding: "10px 20px",
-  borderRadius: "5px",
-  cursor: "pointer" as const,
-};
+import styles from "./example-results.module.css";
 
 export default function ExampleResultsGraphqlClient({
   initialData,
@@ -26,23 +17,27 @@ export default function ExampleResultsGraphqlClient({
 
   return (
     <>
-      <ul>
+      <ul className={styles.list}>
         {items.map((item: TPageFields) => (
-          <li key={item.id}>{item.name}</li>
+          <li key={item.id} className={styles.item}>
+            {item.name}
+          </li>
         ))}
       </ul>
       {lastError ? (
-        <p role="alert" style={{ color: "crimson", marginTop: "8px" }}>
+        <p role="alert" className={styles.error}>
           {lastError}
         </p>
       ) : null}
       <button
         type="button"
-        style={buttonStyle}
+        className={styles.button}
         onClick={refetch}
         disabled={isLoading}
       >
-        {isLoading ? "Loading..." : "Refetch from client"}
+        <span className={styles.buttonLabel}>
+          {isLoading ? "Loading..." : "Refetch from client"}
+        </span>
       </button>
     </>
   );

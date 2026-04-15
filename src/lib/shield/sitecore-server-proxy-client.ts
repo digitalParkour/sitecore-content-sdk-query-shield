@@ -9,12 +9,13 @@ import { SitecoreNextjsClientInit } from "node_modules/@sitecore-content-sdk/nex
 
 export class SitecoreServerProxyClient extends SitecoreClient {
   constructor(initOptions: SitecoreNextjsClientInit) {
-    const isClientSide = typeof globalThis.window != "undefined";
-    const useServerProxy = isClientSide;
+    const isClientSide = typeof globalThis.window !== "undefined";
+    const useServerProxy =
+      process.env.NEXT_PUBLIC_USE_SHIELD === "true" && isClientSide;
     if (useServerProxy) {
       // point queries to our custom server side proxy route (/api/graphql)
       initOptions.api.local.apiHost = "/"; // CLient side query can be relative
-      initOptions.api.local.path = "/api/graphql";
+      initOptions.api.local.path = "/api/graphql"; // match edge path
       initOptions.api.edge = {} as unknown as SitecoreConfig["api"]["edge"]; // this hack forces fallback to /api/graphql
     }
     super(initOptions);

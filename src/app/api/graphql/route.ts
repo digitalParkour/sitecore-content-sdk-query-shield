@@ -2,9 +2,9 @@ import { normalizeQuery } from "lib/shield/utils/graphql-util";
 import client from "lib/sitecore-client";
 import { NextRequest, NextResponse } from "next/server";
 
-// These must be all lowercase and start with '/'
+// These must be full path, all lowercase starting with '/'
 const allowedPathPrefixes = [
-  "/sitecore/content/clientprefix", // TODO: Remove this after testing
+  "/sitecore/content", // TODO: scope this appropriately
   // "/sitecore/content/your-tenant/your-site/home",
   // '/sitecore/content/global-data',
 ];
@@ -95,14 +95,14 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Missing query" }, { status: 400 });
   }
 
-  const usePathShield = process.env.SHIELD_QUERY_VAR === "true";
+  const usePathShield = process.env.SHIELD_VARIABLES === "true";
   if (
     usePathShield &&
     !hasAllowedPath(variables?.path?.toString() || variables?.id?.toString())
   ) {
     console.warn("QUERY SHIELD BLOCKED PATH:", variables?.path);
 
-    if (process.env.TEMP_SHIELD_QUERY_BYPASS_AND_LOG !== "true") {
+    if (process.env.TEMP_SHIELD_BYPASS_AND_LOG !== "true") {
       return NextResponse.json({ error: "Invalid query" }, { status: 400 });
     }
   }
@@ -129,7 +129,7 @@ export async function POST(req: NextRequest) {
 
     if (!resolved) {
       console.warn("QUERY SHIELD BLOCKED QUERY:", incomingQuery);
-      if (process.env.TEMP_SHIELD_QUERY_BYPASS_AND_LOG !== "true") {
+      if (process.env.TEMP_SHIELD_BYPASS_AND_LOG !== "true") {
         return NextResponse.json({ error: "Unknown query" }, { status: 400 });
       }
 

@@ -8,10 +8,9 @@ import { TExampleResult } from "./example.type";
  * Here we will query against Sitecore's GraphQL endpoint.
  */
 export async function fetchGraphQlExample(
-  path: string = "/sitecore/content/clientprefix/clientprefix",
+  path: string = "/sitecore/content",
   lang: string = "en",
 ): Promise<TExampleResult> {
-  console.log("QueryExample", queryExample);
   return (await client.getData<TExampleResult>(queryExample, {
     path: path,
     lang: lang,

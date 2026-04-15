@@ -1,0 +1,248 @@
+.card {
+  --card-fg: #0f172a;
+  --card-fg-muted: #475569;
+  --card-border: color-mix(in srgb, var(--card-fg) 14%, transparent);
+  --card-border-glow: color-mix(in srgb, #2563eb 22%, transparent);
+  --card-surface-hover: color-mix(in srgb, var(--card-fg) 4%, transparent);
+  --card-accent: #2563eb;
+  --card-accent-hover: #1d4ed8;
+
+  max-width: 22rem;
+  padding: 1.5rem 1.375rem 1.375rem;
+  font-family:
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    Arial,
+    sans-serif;
+  color: var(--card-fg);
+  background: #fff;
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, #fff 70%, var(--card-border-glow)),
+    0 1px 2px color-mix(in srgb, var(--card-fg) 7%, transparent),
+    0 4px 12px color-mix(in srgb, var(--card-fg) 6%, transparent),
+    0 16px 40px color-mix(in srgb, var(--card-fg) 10%, transparent),
+    0 32px 64px color-mix(in srgb, var(--card-fg) 6%, transparent);
+}
+
+.title {
+  margin: 0 0 0.875rem;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.3;
+  color: var(--card-fg);
+  background-image: linear-gradient(
+    115deg,
+    #0f172a 0%,
+    #1d4ed8 38%,
+    #6366f1 55%,
+    #0ea5e9 72%,
+    #312e81 100%
+  );
+  background-size: 160% 100%;
+  background-position: 0% 50%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@supports not (background-clip: text) {
+  .title {
+    color: var(--card-fg);
+    background-image: none;
+  }
+}
+
+.divider {
+  height: 1px;
+  margin: 0 0 1.125rem;
+  border: 0;
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--card-fg) 12%, transparent),
+    color-mix(in srgb, var(--card-fg) 4%, transparent) 55%,
+    transparent
+  );
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.list {
+  list-style: none;
+  margin: 0 0 1rem;
+  padding: 0;
+}
+
+.item {
+  margin: 0;
+  padding: 0.5rem 0.625rem;
+  font-size: 0.9375rem;
+  line-height: 1.45;
+  color: var(--card-fg-muted);
+  border-radius: 8px;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.item + .item {
+  margin-top: 0.125rem;
+}
+
+.item:hover {
+  color: var(--card-fg);
+  background-color: var(--card-surface-hover);
+}
+
+.error {
+  margin: 0 0 0.875rem;
+  padding: 0.5rem 0.625rem;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: #b91c1c;
+  background: color-mix(in srgb, #dc2626 8%, transparent);
+  border-radius: 8px;
+}
+
+@keyframes button-gradient-flow {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes button-shimmer-sweep {
+  0% {
+    transform: translate3d(-140%, 0, 0) skewX(-18deg);
+    opacity: 0;
+  }
+  18% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(220%, 0, 0) skewX(-18deg);
+    opacity: 0;
+  }
+}
+
+.button {
+  position: relative;
+  z-index: 0;
+  align-self: flex-start;
+  margin-top: 0.125rem;
+  padding: 0.5625rem 1rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  font-family: inherit;
+  letter-spacing: 0.01em;
+  color: #fff;
+  isolation: isolate;
+  border: none;
+  border-radius: 9px;
+  cursor: pointer;
+  overflow: hidden;
+  background-color: var(--card-accent);
+  background-image: linear-gradient(
+    95deg,
+    #1d4ed8 0%,
+    #2563eb 22%,
+    #6366f1 48%,
+    #3b82f6 72%,
+    #1d4ed8 100%
+  );
+  background-size: 220% 100%;
+  background-position: 0% 50%;
+  box-shadow:
+    0 1px 2px color-mix(in srgb, var(--card-accent) 40%, transparent),
+    0 4px 14px color-mix(in srgb, #6366f1 22%, transparent);
+  transition:
+    box-shadow 0.2s ease,
+    transform 0.1s ease;
+}
+
+.buttonLabel {
+  position: relative;
+  z-index: 1;
+  display: inline-block;
+  text-shadow: 0 1px 1px color-mix(in srgb, #0f172a 35%, transparent);
+}
+
+.button::after {
+  content: "";
+  position: absolute;
+  top: -60%;
+  bottom: -60%;
+  left: -80%;
+  width: 55%;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(
+    100deg,
+    transparent 0%,
+    color-mix(in srgb, #fff 0%, transparent) 35%,
+    color-mix(in srgb, #fff 55%, transparent) 50%,
+    color-mix(in srgb, #e0e7ff 45%, transparent) 58%,
+    transparent 100%
+  );
+  opacity: 0;
+  mix-blend-mode: soft-light;
+  will-change: transform, opacity;
+}
+
+.button:hover:not(:disabled) {
+  box-shadow:
+    0 2px 6px color-mix(in srgb, var(--card-accent) 45%, transparent),
+    0 10px 28px color-mix(in srgb, #6366f1 28%, transparent);
+  animation: button-gradient-flow 2.4s ease-in-out infinite alternate;
+}
+
+.button:hover:not(:disabled)::after {
+  animation: button-shimmer-sweep 1.45s ease-in-out infinite;
+}
+
+.button:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.button:focus-visible {
+  outline: 2px solid var(--card-accent);
+  outline-offset: 2px;
+}
+
+.button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  animation: none;
+}
+
+.button:disabled::after {
+  animation: none;
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .title {
+    background-position: 0% 50%;
+  }
+
+  .button:hover:not(:disabled) {
+    animation: none;
+    background-position: 50% 50%;
+  }
+
+  .button:hover:not(:disabled)::after {
+    animation: none;
+    opacity: 0;
+  }
+}
